@@ -1,5 +1,4 @@
-import { AuditPlan, AuditRecommendation, AuditResult, ToolInput, UseCase } from '../types';
-import { getMonthlyPrice, isPayAsYouGo } from './pricing-data';
+import { AuditRecommendation, AuditResult, ToolInput, UseCase } from '../types';
 
 function createId() {
   if (typeof crypto !== 'undefined' && typeof crypto.randomUUID === 'function') {
@@ -21,14 +20,6 @@ function buildRecommendation(
     reason,
     monthlySavings: Math.max(0, Math.round(monthlySavings))
   };
-}
-
-function calculateFallbackSavings(tool: ToolInput): number {
-  if (isPayAsYouGo(tool.tool)) {
-    return Math.round(tool.monthlySpend * 0.18);
-  }
-  const baselinePrice = getMonthlyPrice(tool.tool, tool.plan);
-  return baselinePrice === null ? Math.round(tool.monthlySpend * 0.15) : Math.max(0, tool.monthlySpend - baselinePrice);
 }
 
 function auditTool(tool: ToolInput): AuditRecommendation {
@@ -182,7 +173,10 @@ export function summarizeAudit(tools: ToolInput[], recommendations: AuditRecomme
   return `The audit identified ${savedTools.length} meaningful optimization opportunities. ${detailLine} These changes could save about $${Math.round(totalAnnual).toLocaleString()} annually while keeping your current workflows intact.`;
 }
 
-export function createAuditResult(tools: ToolInput[], teamSize: number, primaryUseCase: UseCase): AuditResult {
+export function createAuditResult(tools: ToolInput[], _teamSize: number, _primaryUseCase: UseCase): AuditResult {
+  void _teamSize;
+  void _primaryUseCase;
+
   const recommendations = tools.map(auditTool);
   const totalMonthlySavings = recommendations.reduce((sum, recommendation) => sum + recommendation.monthlySavings, 0);
 
