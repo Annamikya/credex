@@ -17,9 +17,9 @@ export function Navbar() {
         </Link>
         <div className="hidden items-center gap-8 md:flex">
           {navLinks.map((link) => (
-            <Link key={link.href} href={link.href} className="text-sm text-slate-300 transition hover:text-white">
+            <a key={link.href} href={link.href} className="text-sm text-slate-300 transition hover:text-white">
               {link.label}
-            </Link>
+            </a>
           ))}
         </div>
         <Link href="/audit">
